@@ -260,11 +260,19 @@ function person(x, y, u, o = {}) {
     for (let i = 0; i <= 26; i++) { const a = Math.PI + i / 26 * Math.PI; fr.push([Math.cos(a) * rx * 1.08 + sh * .2, Math.sin(a) * ry * 1.04 - ry * .08]); }
     fr.push([rx * 1.08 + sh * .3, ry * .05]);
     if (!back) for (let i = n; i >= 0; i--) { const k = i / n, xx = lerp(-rx * .95, rx * .95, k) + sh, yy = -ry * (.28 + (i % 2 ? .1 : -.02)) - (side && k < .4 ? ry * .3 : 0); fr.push([xx, yy]); }
-    if (!back) paint(fr, { wash: HAIR, ink: ST.ink, sw: sw * .8 });
+    if (side) {   // profile: a cap over the top and the back of the head, a short jagged fringe at the front, behind the ear
+      const C = [];
+      for (let i = 0; i <= 20; i++) { const a = (160 + i / 20 * 172) * Math.PI / 180; C.push([Math.cos(a) * rx * 1.07, Math.sin(a) * ry * 1.04 - ry * .06]); }
+      C.push([rx * .62, -ry * .2], [rx * .48, -ry * .4], [rx * .34, -ry * .22], [rx * .16, -ry * .36], [-rx * .02, -ry * .16], [-rx * .3, ry * .02], [-rx * .5, ry * .48], [-rx * .82, ry * .52]);
+      paint(C, { wash: HAIR, ink: ST.ink, sw: sw * .8 });
+      paint(ellPts(-rx * .15, ry * .08, rx * .16, ry * .21, 12), { wash: SK, ink: ST.ink, sw: sw * .6 });   // ear in front of the hair
+    } else if (!back) paint(fr, { wash: HAIR, ink: ST.ink, sw: sw * .8 });
     inkLine([[-rx * .35 + sh, -ry * .8], [-rx * .05 + sh, -ry * .55]], sw * .45, HAIRHI, 'inkfine', .4);
     const tf = clamp(o.tuft ?? .5, -1, 1), base = [rx * .15 + sh * .5, -ry * 1.08];
-    const tip = [base[0] + lerp(.55, .2, (tf + 1) / 2) * rx, base[1] - lerp(-.15, .55, (tf + 1) / 2) * ry + Math.sin(t * 5) * .02 * ry];
-    const midp = [lerp(base[0], tip[0], .5) - .1 * rx, lerp(base[1], tip[1], .5) - .08 * ry * (tf + 1)];
+    // tf >= 0: the tuft stands up and curls; tf < 0: it flops over and lies on the hair
+    const up = Math.max(0, tf), dn = Math.max(0, -tf), sway = Math.sin(t * 5) * .02 * ry;
+    const tip = [base[0] + (.35 - .15 * up + .3 * dn) * rx, base[1] - (.3 + .25 * up - .55 * dn) * ry + sway];
+    const midp = [base[0] + (.02 + .2 * dn) * rx, base[1] - (.28 + .18 * up - .1 * dn) * ry];
     paint(ribbon([base, midp, tip], .16 * u, .02 * u), { wash: HAIR, ink: ST.ink, sw: sw * .6 });
   } else {
     if (!back) {
