@@ -35,9 +35,16 @@ let LOOK = 'water';
     if (LOOK === 'pencil') return _inkLine(pts, sw, mixCol(col, ST.inkSoft, .4), 'graphite', curv);
     return _inkLine(pts, sw, col, br, curv);
   };
+  const applySepia = () => {
+    if (typeof SEPIA === 'undefined' || SEPIA <= 0) return;
+    const c = outX, k = SEPIA; SEPIA = 0;
+    c.globalCompositeOperation = 'multiply'; c.fillStyle = `rgba(214,170,110,${.55 * k})`; c.fillRect(0, 0, W, H);
+    const g = c.createRadialGradient(W / 2, H / 2, H * .35, W / 2, H / 2, H * .95); g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(1, `rgba(120,80,40,${.6 * k})`);
+    c.fillStyle = g; c.fillRect(0, 0, W, H); c.globalCompositeOperation = 'source-over';
+  };
   composite = t => {
-    if (LOOK !== 'flat') return _composite(t);
+    if (LOOK !== 'flat') { _composite(t); return applySepia(); }
     const c = outX; c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1;
-    c.drawImage(drawingContext.canvas, 0, 0, W, H); drawLetters(c);
+    c.drawImage(drawingContext.canvas, 0, 0, W, H); drawLetters(c); applySepia();
   };
 })();
