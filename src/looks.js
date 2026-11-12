@@ -3,7 +3,7 @@
 //   'water'  : the kit's look. Flat washes + boiling ink + watercolour fills, paper grain over everything.
 //   'flat'   : clean flat cartoon. Watercolour fills become solid colour, steady marker outlines, no paper grain.
 //   'pencil' : colour-pencil storybook. Light washes with pencil hatching on top, graphite outlines, paper shows through.
-let LOOK = 'water';
+let LOOK = 'water', FASTFILL = true;
 (() => {
   const _paint = paint, _inkLine = inkLine, _composite = composite, _defineBrushes = defineBrushes;
   defineBrushes = () => {
@@ -28,6 +28,17 @@ let LOOK = 'water';
       if (q.ink !== null) { q.br = 'graphite'; q.ink = mixCol(q.ink || ST.ink, ST.inkSoft, .4); }
       return _paint(pts, q);
     }
+    // A flat, opaque full-frame backdrop costs ~1 s as a brush wash; draw it natively instead (identical flat colour).
+    if (FASTFILL && o.wash && o.ink === null && !o.fill && !o.hatch && (o.washOp ?? 255) >= 255 && pts.length === 4) {
+      const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+      if (Math.max(...xs) - Math.min(...xs) >= W && Math.max(...ys) - Math.min(...ys) >= H) {
+        flushBrush(); push(); noStroke(); fill(o.wash); rect(Math.min(...xs), Math.min(...ys), Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)); pop();
+        return;
+      }
+    }
+    // FASTFILL: a watercolour fill costs ~8 s a frame without a GPU. Large soft depth patches become a translucent wash
+    // (the paper grain on top keeps them from looking digital). Set FASTFILL = false on a machine with a GPU.
+    if (FASTFILL && o.fill && !o.wash && !o.hatch) return _paint(pts, { ...o, fill: undefined, wash: o.fill, washOp: (o.fillOp ?? 170) * .45 });
     return _paint(pts, o);
   };
   inkLine = (pts, sw = 1, col = PAL.ink, br = 'ink', curv = .5) => {
