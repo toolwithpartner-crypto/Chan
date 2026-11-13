@@ -17,7 +17,7 @@
 //   --chrome=<path to Chrome/Chromium>.
 import puppeteer from 'puppeteer-core';
 import { spawn } from 'node:child_process';
-import { mkdirSync, writeFileSync, existsSync, statSync, renameSync, readdirSync } from 'node:fs';
+import { mkdirSync, writeFileSync, existsSync, statSync, renameSync, readdirSync, linkSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { homedir } from 'node:os';
@@ -43,6 +43,9 @@ const span = s => String(s).split(':').map(Number);
 const fields = s => { const out = []; let d = 0, cur = ''; for (const ch of String(s)) { if (ch === ',' && !d) { out.push(cur); cur = ''; continue; } d += ch === '(' ? 1 : ch === ')' ? -1 : 0; cur += ch; } out.push(cur); return out.map(v => isNaN(+v) ? v : +v); };
 
 if (args.encode) {
+  // fill gaps left by --step: each missing frame repeats the one before it (hard link, no extra disk)
+  { const have = new Set(readdirSync(FRAMES_DIR)); const last = Math.max(...[...have].filter(f => /^f\d{5}\.jpg$/.test(f)).map(f => +f.slice(1, 6)));
+    for (let i = 1; i <= last; i++) { const f = `f${String(i).padStart(5, '0')}.jpg`; if (!have.has(f)) { const p = `${FRAMES_DIR}/f${String(i - 1).padStart(5, '0')}.jpg`; if (existsSync(p)) { linkSync(p, `${FRAMES_DIR}/${f}`); have.add(f); } } } }
   const out = args.out || 'out/video.mp4', n = readdirSync(FRAMES_DIR).filter(f => f.endsWith('.jpg')).length, audio = args.audio;
   console.log(`encoding ${n} frames → ${out}${audio ? ' with ' + audio : ''}`);
   await run('ffmpeg', ['-y', '-loglevel', 'error', '-stats', '-framerate', String(fps), '-i', `${FRAMES_DIR}/f%05d.jpg`,
@@ -119,7 +122,8 @@ if (args.sheet || args.strip) {
   const [a, b] = args.range ? span(args.range) : [0, len], workers = +(args.workers || 4);
   mkdirSync(FRAMES_DIR, { recursive: true });
   const first = Math.round(a * fps), last = Math.min(Math.ceil(len * fps) - 1, Math.round(b * fps) - 1);
-  const todo = []; for (let i = first; i <= last; i++) { const f = `${FRAMES_DIR}/f${String(i).padStart(5, '0')}.jpg`; if (!existsSync(f) || statSync(f).size < 1000) todo.push(i); }
+  const step = +(args.step || 1);   // --step=2: render every other frame (animation on twos); --encode fills the gaps
+  const todo = []; for (let i = first; i <= last; i += 1) { if ((i - first) % step) continue; const f = `${FRAMES_DIR}/f${String(i).padStart(5, '0')}.jpg`; if (!existsSync(f) || statSync(f).size < 1000) todo.push(i); }
   console.log(`${todo.length} frames to render (${last - first + 1 - todo.length} already done), ${workers} workers`);
   let next = 0, done = 0; const start = Date.now();
   await Promise.all(Array.from({ length: workers }, async (_, w) => {
