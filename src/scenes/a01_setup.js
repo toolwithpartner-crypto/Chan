@@ -139,8 +139,8 @@
   }
 
   // ---------- 8: the friend request ----------
-  function shotRequest(t, lt) {
-    const dur = 6, into = ease(seg(lt, 3.5, 5.9));
+  function shotRequest(t, lt, dur) {
+    const into = ease(seg(lt, 3.5, 5.9));
     const bx = 1180, by = 360;   // the notification card, world coords
     camBegin(lerp(860, bx + 40, into), lerp(540, by + 10, into), lerp(1.35, 3.0, easeIn(seg(lt, 3.5, 5.9))));
     bedroom(t, { clock: 21.1, lamp: .7 });
@@ -178,5 +178,68 @@
     if (lt > dur - .45) flash(ease(seg(lt, dur - .45, dur)), ST.cream);
   }
 
-  shots([[T0, shotPlaza], [16, shotBed], [20, shotDoor], [24.6, shotAccount], [27, shotRule], [29.8, shotNod], [32, shotRequest]]);
+
+  // ---------- inserted flashback 'ask' (pacing.js): why Mom gave him her password ----------
+  //  0.0–2.6  ECU the tablet: the store page for Robox; he taps GET; it asks for the password of Mom's account
+  //  2.6–8.0  Mom getting ready to leave; Nerd runs in with the tablet and begs; she checks her watch, she's late
+  function shotAsk(t, lt, dur) {
+    if (lt < 2.6) {
+      camBegin(960, 540, 1.02 + .04 * lt);
+      boilSeed('ask-bg'); paint(rectPts(-200, -200, W + 400, H + 400), { wash: '#EFE3CC', ink: null });
+      tablet(960, 540, 900, 0, 1, { id: 'ask' });
+      boilSeed('ask-scr'); paint(rrPts(420, 200, 1080, 640, 18), { wash: '#F6F8FA', ink: null });
+      // the store listing
+      paint(rrPts(480, 250, 180, 180, 36), { wash: '#8FD3F5', ink: ST.ink, sw: 1.2 });
+      avatar(570, 410, 34, { skin: 'classic', id: 'ask-ic', face: 'happy', t: 0 });
+      txt('Robox', 700, 300, 64, ST.ink, { w: 700 });
+      txt('Free · Games · 4.8 ★', 700, 365, 34, '#6B6B7A');
+      const tapK = seg(lt, .8, 1.0), btnLit = lt > .9 && lt < 1.2;
+      paint(rrPts(700, 400, 200, 70, 35), { wash: btnLit ? '#2F5FA8' : '#3E6FB0', ink: null });
+      txt('GET', 800, 437, 36, ST.cream, { align: 'center', w: 700 });
+      // finger taps GET
+      if (lt < 1.4) { boilSeed('ask-f'); const fy = lerp(760, 470, ease(tapK)) + 20 * Math.max(0, Math.sin((lt - 1) * 12)) * (lt > 1 ? 1 : 0); paint(ribbon([[880, 1150], [830, fy + 150], [810, fy]], 90, 64), { wash: ST.skin, ink: ST.ink, sw: 1.2 }); }
+      // the password sheet slides up
+      const k = backOut(seg(lt, 1.3, 1.65));
+      if (k > .02) {
+        boilSeed('ask-pw'); paint(rectPts(420, 200, 1080, 640), { wash: '#1B1F38', washOp: 110 * clamp(k), ink: null });
+        const py = lerp(900, 380, clamp(k));
+        paint(rrPts(560, py, 800, 400, 28), { wash: '#FFFFFF', ink: ST.ink, sw: 1.4 });
+        if (k > .7) {
+          txt('Sign in to download', 960, py + 70, 44, ST.ink, { align: 'center', w: 700 });
+          txt('Password for mom.home@mail.com', 960, py + 135, 32, '#6B6B7A', { align: 'center' });
+          paint(rrPts(640, py + 180, 640, 70, 14), { wash: '#F2F4F7', ink: ST.inkSoft, sw: 1 });
+          if (Math.floor(lt * 3) % 2) inkLine([[670, py + 195], [670, py + 235]], 1.6, ST.ink, 'ink', 0);
+          boilSeed('ask-lock'); paint(rrPts(940, py + 290, 40, 34, 6), { wash: ST.gold, ink: ST.ink, sw: .8 }); inkLine([[948, py + 292], [948, py + 278], [972, py + 278], [972, py + 292]], 1.4, ST.ink, 'ink', .6);
+        }
+      }
+      camEnd();
+      sepia(1);
+      if (lt < .35) flash(1 - ease(lt / .35), '#F3E3C4');
+    } else {
+      const l = lt - 2.6, U = 92;
+      camBegin(1180, 600, 1.35 + .05 * ease(seg(l, 0, 5.4)));
+      homeDay(t);
+      // Mom by the sofa, slipping her bag on her shoulder, then checking her watch
+      const watch = seg(l, 2.4, 2.8) * (1 - seg(l, 3.8, 4.1));
+      const mP = pose(l, [[0, { eyes: 'dot', look: [-.3, .7], brow: 'flat', mouth: 'flat', turn: .3, lean: .08 }],
+        [.6, { look: [.8, 0], brow: 'up', mouth: 'o', lean: 0, _d: .2 }], [2.4, { look: [-.2, .8], brow: 'worry', mouth: 'tight', _d: .2 }], [3.9, { look: [.8, .1], brow: 'sad', mouth: 'flat', _d: .25 }]]);
+      person(1040, 940, U, { who: 'mom', id: 'ask-m', ...mP, arms: [[.2 + .7 * watch, .2 + 1.5 * watch], [.25, .2]], hands: ['open', 'hold'] });
+      boilSeed('ask-bag'); paint(rrPts(1110, 940 - 3.1 * U, 70, 92, 12), { wash: '#5A3E36', ink: ST.ink, sw: 1 });
+      if (watch > .5) { boilSeed('ask-w'); paint(ellPts(1000, 940 - 3.8 * U, 12, 12, 10), { wash: ST.cream, ink: ST.ink, sw: .8 }); }
+      // Nerd runs in from the right with the tablet held up, then begs
+      const run = 1 - easeOut(seg(l, 0, .9)), nx = 1400 + 520 * run;
+      const beg = seg(l, 3.9, 4.2);
+      const nP = pose(l, [[0, { eyes: 'wide', mouth: 'grin', tuft: 1, look: [-.8, 0] }], [1.0, { eyes: 'dot', look: [-.8, -.1], brow: 'up', turn: -.5 }],
+        [3.9, { eyes: 'wide', brow: 'worry', mouth: 'o', tilt: -.12, _d: .2 }]]);
+      const tx = nx - 60, ty = 940 - 2.3 * U;
+      person(nx, 940, U, { who: 'nerd', id: 'ask-n', ...nP, ...(run > .02 ? { view: 'side', flip: true, walk: run * 6 } : {}),
+        ...(beg > .5 ? { arms: [[.7, 2.0], [.7, 2.0]], hands: ['fist', 'fist'], dy: .06 * Math.abs(Math.sin(l * 9)) } : { reach: [[tx - .45 * U, ty + .05 * U], [tx + .45 * U, ty]], hands: ['hold', 'hold'] }) });
+      if (beg <= .5) tablet(tx, ty, U * .9, .1, .8, { id: 'ask-t' });
+      camEnd();
+      sepia(1);
+      if (l < .2) flash(.6 * (1 - l / .2), '#F3E3C4');
+    }
+  }
+  insertShot('ask', shotAsk);
+  shots([[12, shotPlaza], [16, shotBed], [20, shotDoor], [24.6, shotAccount], [27, shotRule], [29.8, shotNod], [32, shotRequest]]);
 })();

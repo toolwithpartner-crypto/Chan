@@ -164,8 +164,7 @@
     { const [qx, qy, qs] = tr(bx + 104, by + 70); thai('A gift from Admin!', qx, qy, 30 * qs, ST.ink, { w: 700, alpha: .55 + .45 * bl, screen: true }); }
     if (k > .2) glow(bx + 57, by + 67, 90, ST.gold, .5 * bl * k);
   }
-  function shotPanels(t, lt) {
-    const dur = 6;   // the act's last shot computes its own length
+  function shotPanels(t, lt, dur) {
     boilSeed('pbg'); paint(rectPts(-40, -40, W + 80, H + 80), { wash: '#3A3546', ink: null });
     paint(ellPts(960, 480, 1000, 520, 24, 8), { fill: '#4A4458', fillOp: 120, bleed: .3, tex: .5, ink: null });
     // which panel is lit: wallet 0.2–1.9, homework 1.9–3.7, chat 3.7–

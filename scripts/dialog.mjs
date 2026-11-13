@@ -5,8 +5,9 @@
 // It also warns when a line runs into the next line of a different speaker.   usage: node scripts/dialog.mjs
 import fs from 'fs';
 import { execFileSync } from 'child_process';
+import { TOTAL } from './pacing.mjs';
 const lines = JSON.parse(fs.readFileSync('out/voice/lines.json', 'utf8'));
-const DUR = 150, FPS = 24, SR = 24000, TARGET = -20;
+const DUR = Math.ceil(TOTAL), FPS = 24, SR = 24000, TARGET = -20;
 const rows = [], inputs = [], filt = [], meas = [];
 let i = 0;
 for (const [id, L] of Object.entries(lines)) {

@@ -3,7 +3,7 @@
 //   0–12 hook, unsettled (low pulse, a music box asking a question) · 12–38 playful plucks; music-box flashback
 //   38–82 warm and a bit too sweet (the admin) · 82–118 the same theme turned minor, a ticking pulse that tightens
 //   118–150 sad piano, slower, ending unresolved and then resolving softly.
-import { buf, add, n, mtof, pluck, box, piano, pad, bass, kick, tick, writeWav } from './audiolib.mjs';
+import { buf, add, n, mtof, pluck, box, piano, pad, bass, kick, tick, writeWav, PACING } from './audiolib.mjs';
 const B = buf(), BEAT = 60 / 96;
 const chord = { C: ['C3', 'E3', 'G3'], G: ['G2', 'B2', 'D3'], Am: ['A2', 'C3', 'E3'], F: ['F2', 'A2', 'C3'], Em: ['E2', 'G2', 'B2'], Dm: ['D3', 'F3', 'A3'], E: ['E2', 'G#2', 'B2'] };
 const f = s => mtof(n(s)), up = (s, k) => mtof(n(s) + k);
@@ -57,5 +57,11 @@ bassline(118.4, ['Am', 'F', 'C', 'G', 'Am', 'F', 'C', 'G'], 4, .25, [0]);
 THEME.slice(0, 9).forEach(([s, b, l]) => add(B, 132 + b * BEAT * 1.25, 3, piano(f(s), 2.2), .3, .2));
 chords(140.4, ['F', 'G', 'C'], 5, .3, 'piano');
 ['C5', 'E5', 'G5', 'C6'].forEach((s, k) => add(B, 146.5 + k * .45, 3, piano(f(s), 2.5), .22, .3));
+// pacing holds: a soft held chord fills each pause so the music breathes instead of dropping out
+for (const sh of PACING.shots) {
+  const hold = (sh.b2 - sh.a2) - (sh.b - sh.a) * sh.slow; if (hold < .4) continue;
+  const tense = sh.a >= 82 && sh.a < 118, sad = sh.a >= 118, c = tense ? ['A2', 'C3', 'E3'] : sad ? ['F2', 'A2', 'C3'] : sh.a < 12 ? ['D3', 'F3', 'A3'] : ['C3', 'E3', 'G3'];
+  const t = sh.b2 - hold - .3; c.forEach((s, j) => add(B, t, hold + .9, pad(f(s), hold + .9), .18, j - 1, true));
+}
 writeWav(B, 'out/audio/music.wav', .9);
 console.log('out/audio/music.wav');

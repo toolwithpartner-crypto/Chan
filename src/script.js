@@ -15,6 +15,10 @@ const LINES = [
   { id: 'a01', at: 12.35, who: 'friendA', text: 'Limited-edition dragon wings!', style: 'an excited, show-off 11-year-old boy shouting in a game' },
   { id: 'a02', at: 14.45, who: 'friendB', text: "And Nerd's still in the classic skin! Ha!", style: 'a cheeky 11-year-old girl teasing, laughing' },
   { id: 'a03', at: 17.4, who: 'nerd', text: 'I want them too…', style: 'an 11-year-old boy, small and sad, to himself' },
+  // (inserted flashback 'ask': times are seconds into that shot)
+  { id: 'a10', ins: 'ask', at: 3.0, who: 'nerd', text: 'Mom! Can I download Robox? It needs your password!', style: 'an 11-year-old boy running up to his mother, excited and in a hurry' },
+  { id: 'a11', ins: 'ask', at: 5.3, who: 'mom', text: "Now? I'm already late…", style: 'a busy mother putting on her shoes, distracted, rushed' },
+  { id: 'a12', ins: 'ask', at: 6.6, who: 'nerd', text: 'Pleeease! Everyone at school plays it!', style: 'an 11-year-old boy begging, hands together' },
   { id: 'a04', at: 21.45, who: 'mom', text: "My password is… hmm-hmm. Remember it, okay?", sub: 'My password is… (she tells him). Remember it, okay?', style: 'a busy mother rushing out of the door, quick and warm' },
   { id: 'a05', at: 23.2, who: 'mom', text: "Download your games yourself. Mommy's busy!", style: 'hurried, cheerful, already leaving' },
   { id: 'a06', at: 27.3, who: 'mom', text: 'Free games only.', style: 'firm but kind, pointing a finger' },
@@ -57,7 +61,7 @@ const VOICES = { vo: 'Charon', mom: 'Sulafat', nerd: 'Leda', think: 'Leda', devi
 SUBCOL.think = '#FFFFFF'; SUBCOL.devil = '#FF9C8A'; SUBCOL.friendA = '#FFE07A'; SUBCOL.friendB = '#FFC1DE'; SUBCOL.bank = '#D8F0E0';
 function lineAt(L) {
   if (typeof DIALOG !== 'undefined') { const d = DIALOG.find(r => r[3] === L.id); if (d) return d[0]; }
-  return L.at;
+  return window.PACING ? window.PACING.warp(L.at, L.ins) : L.at;
 }
 function lineLen(L) {
   if (typeof DIALOG !== 'undefined') { const d = DIALOG.find(r => r[3] === L.id); if (d) return d[2].length / 24; }

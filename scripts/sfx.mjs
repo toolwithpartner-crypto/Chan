@@ -1,5 +1,5 @@
 // sfx.mjs: every sound effect, synthesized and placed on the film's timeline → out/audio/sfx.wav. usage: node scripts/sfx.mjs
-import { buf, add, beep, square, bell, whoosh, noise, tick, kick, writeWav } from './audiolib.mjs';
+import { buf, add, PACING, beep, square, bell, whoosh, noise, tick, kick, writeWav } from './audiolib.mjs';
 const B = buf();
 const tap = t => { add(B, t, .06, beep(1800, .06), .25); add(B, t + .07, .08, beep(2400, .08), .2); };
 const declined = t => { add(B, t, .18, square(330, .18), .35); add(B, t + .22, .3, square(247, .3), .35); };
@@ -25,6 +25,12 @@ add(B, 26.6, .7, whoosh(.7, false), .4);
 add(B, 29.8, .6, whoosh(.6), .25);
 ding(33.2, .45);                                     // the friend request
 add(B, 35.6, 2.4, whoosh(2.4), .3);                  // push into the card
+// inserted flashback 'ask' (times inside that shot)
+{ const A = PACING.shots.find(x => x.ins === 'ask').a2, at = x => A + x;
+  add(B, at(.95), .12, beep(880, .12), .3, 0, true); add(B, at(1.35), .5, whoosh(.5), .25, 0, true);
+  add(B, at(1.6), 1, bell(1046, .5), .25, 0, true);
+  for (let x = 2.6; x < 3.5; x += .18) add(B, at(x), .1, kick(), .25, 0, true);   // running steps
+}
 // Act 2: chat pops at each bubble
 for (const t of [38.6, 39.6, 52.1, 52.8, 56.1, 56.7, 57.3, 60.0, 63.2, 64.1, 73.5, 74.3]) pop(t);
 add(B, 40.75, .3, whoosh(.3), .2);

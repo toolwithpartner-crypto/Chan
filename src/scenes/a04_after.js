@@ -100,8 +100,7 @@
     if (lt < .3) flash(1 - lt / .3, '#FBF3E4');
   }
   // 30  144.0–150.0  the hug. Over his shoulder her face doesn't look angry: it freezes, because the password was hers.
-  function s30(t, lt) {
-    const dur = 6;
+  function s30(t, lt, dur) {
     camBegin(990, 560, 1.9 + .2 * ease(seg(lt, 0, dur)));
     homeDay(t);
     const U = 92, pull = ease(seg(lt, 0, .8));

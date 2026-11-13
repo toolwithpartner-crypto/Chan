@@ -1,6 +1,8 @@
 // audiolib.mjs: tiny offline synth for the film's sound effects and score (no samples, everything from math).
 import fs from 'fs';
-export const SR = 48000, DUR = 150;
+import { warp, TOTAL, PACING } from './pacing.mjs';
+export { PACING };
+export const SR = 48000, DUR = Math.ceil(TOTAL);   // film length after pacing.js
 export const buf = () => [new Float32Array(SR * DUR), new Float32Array(SR * DUR)];
 const rnd = (() => { let s = 12345; return () => ((s = (s * 16807) % 2147483647) / 2147483647) * 2 - 1; })();
 export const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
@@ -8,8 +10,9 @@ const NOTE = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
 export const n = s => { const m = /^([A-G])(#|b)?(-?\d)$/.exec(s); return 12 * (+m[3] + 1) + NOTE[m[1]] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0); };
 
 // add a mono signal f(i, tSec) for `dur` seconds at time t, panned (-1..1), gain g
-export function add(B, t, dur, f, g = 1, pan = 0) {
-  const i0 = Math.round(t * SR), len = Math.round(dur * SR), gl = g * Math.cos((pan + 1) * Math.PI / 4), gr = g * Math.sin((pan + 1) * Math.PI / 4);
+// times are story time (as in the scenes); add() moves them to film time with the pacing map
+export function add(B, t, dur, f, g = 1, pan = 0, raw = false) {
+  const i0 = Math.round((raw ? t : warp(t)) * SR), len = Math.round(dur * SR), gl = g * Math.cos((pan + 1) * Math.PI / 4), gr = g * Math.sin((pan + 1) * Math.PI / 4);
   for (let i = 0; i < len; i++) { const j = i0 + i; if (j < 0 || j >= B[0].length) continue; const v = f(i, i / SR); B[0][j] += v * gl; B[1][j] += v * gr; }
 }
 const env = (t, a, d) => (t < a ? t / a : Math.exp(-(t - a) / d));

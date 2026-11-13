@@ -4,8 +4,10 @@
 // lt = time since the shot started, dur = the shot's length. It paints the WHOLE frame, background included, and must be
 // a pure function of t: frames render in parallel and out of order, so nothing may carry over from one frame to the next.
 
-const SHOTS = [];
+const SHOTS = [], INSERTED = {};
 function shots(list) { SHOTS.push(...list); SHOTS.sort((a, b) => a[0] - b[0]); }
+// insertShot(name, fn): the drawing for an inserted shot (pacing.js INSERTS); it gets lt from its own start
+function insertShot(name, fn) { INSERTED[name] = fn; }
 
 // Standalone loops (model sheets, GIFs, tests), outside the main timeline: window.LOOP = LOOPS[name] swaps the whole
 // frame for that function, called with loop time. Give each a length: LOOPS.x = t => { ... }; LOOPS.x.len = 4;
@@ -15,9 +17,17 @@ function drawWorld(t) {
   if (window.LOOP) window.LOOP(t);
   else if (!SHOTS.length) placeholder(t);
   else {
-    let i = 0; while (i + 1 < SHOTS.length && t >= SHOTS[i + 1][0]) i++;
-    const t0 = SHOTS[i][0], end = i + 1 < SHOTS.length ? SHOTS[i + 1][0] : DUR;
-    SHOTS[i][1](t, t - t0, end - t0);
+    // pacing.js: shots may play slower or hold at the end; the shot code still sees its own story-time lt and a dur
+    // that includes the hold, so exit transitions land at the real end.
+    if (!window.PACING) window.PACING = typeof makePacing === 'function' ? makePacing(SHOTS.map(s => s[0])) : null;
+    const P = window.PACING;
+    let i = 0;
+    if (P) {
+      while (i + 1 < P.shots.length && t >= P.shots[i + 1].a2) i++;
+      const sh = P.shots[i], fn = sh.ins ? INSERTED[sh.ins] : SHOTS.find(s => s[0] === sh.a)[1];
+      fn(t, (t - sh.a2) / sh.slow, (sh.b2 - sh.a2) / sh.slow);
+    }
+    else { while (i + 1 < SHOTS.length && t >= SHOTS[i + 1][0]) i++; const t0 = SHOTS[i][0], end = i + 1 < SHOTS.length ? SHOTS[i + 1][0] : DUR; SHOTS[i][1](t, t - t0, end - t0); }
     CAM = null;
     if (typeof scriptSubs === 'function') scriptSubs(t);   // spoken lines (script.js)
   }
