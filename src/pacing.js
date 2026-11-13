@@ -21,7 +21,7 @@ const PACE = {
 };
 // INSERTS: whole new shots placed before a story-time shot (their own clock, their own lines in script.js via `ins`).
 const INSERTS = {
-  ask: { before: 20, len: 8.0 },   // flashback: the app store asks for Mom's password; Nerd runs to ask her for it
+  ask: { before: 20, len: 9.0 },   // flashback: the app store asks for Mom's password; Nerd runs to ask her for it
 };
 const STORY_END = 150;
 // Build the map from the shot starts (story time). Returns { shots: [{a, b, a2, b2, slow}], warp(t), total }.

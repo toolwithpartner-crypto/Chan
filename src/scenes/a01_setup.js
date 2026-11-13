@@ -228,9 +228,9 @@
       if (watch > .5) { boilSeed('ask-w'); paint(ellPts(1000, 940 - 3.8 * U, 12, 12, 10), { wash: ST.cream, ink: ST.ink, sw: .8 }); }
       // Nerd runs in from the right with the tablet held up, then begs
       const run = 1 - easeOut(seg(l, 0, .9)), nx = 1400 + 520 * run;
-      const beg = seg(l, 3.9, 4.2);
+      const beg = seg(l, 4.3, 4.6);
       const nP = pose(l, [[0, { eyes: 'wide', mouth: 'grin', tuft: 1, look: [-.8, 0] }], [1.0, { eyes: 'dot', look: [-.8, -.1], brow: 'up', turn: -.5 }],
-        [3.9, { eyes: 'wide', brow: 'worry', mouth: 'o', tilt: -.12, _d: .2 }]]);
+        [4.3, { eyes: 'wide', brow: 'worry', mouth: 'o', tilt: -.12, _d: .2 }]]);
       const tx = nx - 60, ty = 940 - 2.3 * U;
       person(nx, 940, U, { who: 'nerd', id: 'ask-n', ...nP, ...(run > .02 ? { view: 'side', flip: true, walk: run * 6 } : {}),
         ...(beg > .5 ? { arms: [[.7, 2.0], [.7, 2.0]], hands: ['fist', 'fist'], dy: .06 * Math.abs(Math.sin(l * 9)) } : { reach: [[tx - .45 * U, ty + .05 * U], [tx + .45 * U, ty]], hands: ['hold', 'hold'] }) });

@@ -18,7 +18,7 @@ const LINES = [
   // (inserted flashback 'ask': times are seconds into that shot)
   { id: 'a10', ins: 'ask', at: 3.0, who: 'nerd', text: 'Mom! Can I download Robox? It needs your password!', style: 'an 11-year-old boy running up to his mother, excited and in a hurry' },
   { id: 'a11', ins: 'ask', at: 5.3, who: 'mom', text: "Now? I'm already late…", style: 'a busy mother putting on her shoes, distracted, rushed' },
-  { id: 'a12', ins: 'ask', at: 6.6, who: 'nerd', text: 'Pleeease! Everyone at school plays it!', style: 'an 11-year-old boy begging, hands together' },
+  { id: 'a12', ins: 'ask', at: 7.0, who: 'nerd', text: 'Pleeease! Everyone at school plays it!', style: 'an 11-year-old boy begging, hands together' },
   { id: 'a04', at: 21.45, who: 'mom', text: "My password is… hmm-hmm. Remember it, okay?", sub: 'My password is… (she tells him). Remember it, okay?', style: 'a busy mother rushing out of the door, quick and warm' },
   { id: 'a05', at: 23.2, who: 'mom', text: "Download your games yourself. Mommy's busy!", style: 'hurried, cheerful, already leaving' },
   { id: 'a06', at: 27.3, who: 'mom', text: 'Free games only.', style: 'firm but kind, pointing a finger' },
