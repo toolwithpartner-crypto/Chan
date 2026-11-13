@@ -59,3 +59,10 @@ let LOOK = 'water', FASTFILL = true;
     c.drawImage(drawingContext.canvas, 0, 0, W, H); drawLetters(c); applySepia();
   };
 })();
+// Transitions cover everything painted before them, lettering included: flush the queued letters first,
+// so screen text (chat, labels) goes under a wipe or a flash instead of floating on top of it.
+(() => {
+  const _flash = flash, _wipe = brushWipe;
+  flash = (k, col) => { if (k > .01) flushLetters(); _flash(k, col); };
+  brushWipe = (p, cols) => { if (p > 0 && p < 1) flushLetters(); _wipe(p, cols); };
+})();
