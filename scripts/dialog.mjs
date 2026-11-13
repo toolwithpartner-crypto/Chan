@@ -1,4 +1,4 @@
-// dialog.mjs: places every voice file (out/voice/raw/<id>.wav) on the film so its first syllable lands at the line's `at`
+// dialog.mjs: places every voice file (your recordings in voice/<id>.*, else out/voice/raw/<id>.wav) on the film so its first syllable lands at the line's `at`
 // (src/script.js), levels them all to one loudness, and writes
 //   out/audio/dialogue.wav   48 kHz stereo, the film's length
 //   src/dialog.js            DIALOG rows [t0, who, env, id] (env = mouth level 0-9 per 1/24 s) + SPEAK(who, t) for lip-sync
@@ -10,8 +10,11 @@ const DUR = 150, FPS = 24, SR = 24000, TARGET = -20;
 const rows = [], inputs = [], filt = [], meas = [];
 let i = 0;
 for (const [id, L] of Object.entries(lines)) {
-  const f = `out/voice/raw/${id}.wav`;
-  if (!fs.existsSync(f)) { console.log('missing', f); continue; }
+  // your own recording wins: voice/<id>.<any audio format> (phone memo, m4a, mp3, wav...); else the TTS take in out/voice/raw
+  const mine = fs.existsSync('voice') ? fs.readdirSync('voice').find(n => n.replace(/\.[^.]+$/, '').toLowerCase() === id) : null;
+  const f = mine ? `voice/${mine}` : `out/voice/raw/${id}.wav`;
+  if (!fs.existsSync(f)) { console.log('missing', id); continue; }
+  if (mine) console.log('using your recording', f);
   const pcm = execFileSync('ffmpeg', ['-loglevel', 'error', '-i', f, '-f', 'f32le', '-ac', '1', '-ar', String(SR), '-'], { maxBuffer: 1 << 28 });
   const x = new Float32Array(pcm.buffer, pcm.byteOffset, pcm.length / 4), hop = SR / FPS, env = [];
   for (let s = 0; s < x.length; s += hop) { let e = 0; for (let j = s; j < Math.min(s + hop, x.length); j++) e += x[j] * x[j]; env.push(Math.sqrt(e / hop)); }
