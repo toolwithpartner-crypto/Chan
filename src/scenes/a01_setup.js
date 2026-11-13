@@ -28,6 +28,7 @@
     // laughter marks by the friends after the line
     if (lt > 2.2) for (const p of pts) { boilSeed('ha' + p.i); for (let k = 0; k < 3; k++) { const a = -1.2 + k * .5, r = 120 + 12 * Math.sin(lt * 10 + k); inkLine([[p.x + Math.cos(a) * r * .8, p.y - 200 + Math.sin(a) * r * .5], [p.x + Math.cos(a) * r, p.y - 200 + Math.sin(a) * r * .6]], 1.6, ST.ink, 'ink', 0); } }
     camEnd();
+    gameHUD(t);
     if (lt < .35) brushWipe(.5 + lt / .7, ['#3A3F7A', '#5A4A7A']);
     if (lt > dur - .3) flash(ease(seg(lt, dur - .3, dur)) * .9, '#1E2240');
   }
@@ -223,8 +224,11 @@
       const watch = seg(l, 2.4, 2.8) * (1 - seg(l, 3.8, 4.1));
       const mP = pose(l, [[0, { eyes: 'dot', look: [-.3, .7], brow: 'flat', mouth: 'flat', turn: .3, lean: .08 }],
         [.6, { look: [.8, 0], brow: 'up', mouth: 'o', lean: 0, _d: .2 }], [2.4, { look: [-.2, .8], brow: 'worry', mouth: 'tight', _d: .2 }], [3.9, { look: [.8, .1], brow: 'sad', mouth: 'flat', _d: .25 }]]);
-      person(1040, 940, U, { who: 'mom', id: 'ask-m', ...mP, arms: [[.2 + .7 * watch, .2 + 1.5 * watch], [.25, .2]], hands: ['open', 'hold'] });
-      boilSeed('ask-bag'); paint(rrPts(1110, 940 - 3.1 * U, 70, 92, 12), { wash: '#5A3E36', ink: ST.ink, sw: 1 });
+      // the bag swings up from her hand onto her shoulder: she is on her way out
+      const lift = easeOut(seg(l, .1, 1.0)), bagX = lerp(1120, 1100, lift), bagY = lerp(940 - 2.0 * U, 940 - 3.15 * U, lift) - 18 * Math.sin(lift * Math.PI);
+      const rArm = lift < .98 ? { reach: [null, [bagX + 10, bagY - 30]] } : {};
+      person(1040, 940, U, { who: 'mom', id: 'ask-m', ...mP, arms: [[.2 + .7 * watch, .2 + 1.5 * watch], [.25, .2]], hands: ['open', 'hold'], ...rArm });
+      boilSeed('ask-bag'); inkLine([[bagX + 10, bagY - 4], [1075, 940 - 3.95 * U]], 1.6, '#3A2A26', 'ink', .3); paint(rrPts(bagX - 25, bagY, 70, 92, 12), { wash: '#5A3E36', ink: ST.ink, sw: 1 });
       if (watch > .5) { boilSeed('ask-w'); paint(ellPts(1000, 940 - 3.8 * U, 12, 12, 10), { wash: ST.cream, ink: ST.ink, sw: .8 }); }
       // Nerd runs in from the right with the tablet held up, then begs
       const run = 1 - easeOut(seg(l, 0, .9)), nx = 1400 + 520 * run;

@@ -91,7 +91,7 @@
       { t: 0, from: 'admin', lines: ['A 6-digit code will pop up.', 'Send it to me to confirm.'] }, { t: 0, from: 'nerd', lines: ['482917'], red: lt > 5 }];
     // scroll: start at the bottom, glide up to the secret line, hold, glide down to the code
     const sc = kf(lt, [[0, -340], [1.3, 0], [4.0, 0], [5.0, -340]]);
-    chatScreen(1000, 560, 1400, 860, all, 10, { scroll: sc, gone: true });
+    chatScreen(1000, 560, 1400, 860, all, 10, { scroll: sc, gone: true, hands: false });
     // Mom's shoulder and hair in the foreground (left edge), her finger on the glass
     boilSeed('osh'); paint(ellPts(120, 1000, 380, 300, 20), { wash: ST.cardi, ink: ST.ink, sw: 1.4 }); paint(ellPts(150, 640, 230, 260, 20), { wash: ST.hairMom, ink: ST.ink, sw: 1.4 });
     const fy = kf(lt, [[0, 900], [1.3, 640], [4.0, 640], [5.0, 900]]);

@@ -14,11 +14,16 @@ function chatScreen(cx, cy, w, h, msgs, lt, o = {}) {
   glow(cx, cy, w * .7, ST.screenGlow, .35);
   paint(rrPts(x0 - 40, y0 - 40, w + 80, h + 80, 50), { wash: ST.inkSoft, ink: ST.ink, sw: 1.6 });
   paint(rrPts(x0, y0, w, h, 24), { wash: '#EEF3F6', ink: null });
+  if (o.hands !== false) thumbs(x0, y0, w, h);
   // header
   paint(rrPts(x0, y0, w, 110, 24), { wash: '#DCE6EC', ink: null });
   avatar(x0 + 70, y0 + 100, 17, { skin: 'admin', id: 'cs-a', face: 'happy', t: 0 });
   txt('Admin_Official', x0 + 130, y0 + 56, 42, '#5A4A2E', { w: 700 });
-  badgeMark(x0 + 470, y0 + 56, 17);
+  // the "verified" badge: big, glowing, with a glint; it is what makes Nerd trust him
+  { const bx = x0 + 480, by = y0 + 56, pul = .5 + .5 * Math.sin((o.t ?? T) * 4);
+    glow(bx, by, 70, ST.badge, .35 + .25 * pul); badgeMark(bx, by, 26);
+    boilSeed('cs-glint'); paint(starPts(bx + 22, by - 22, 10 + 5 * pul, .3, 4), { wash: '#FFFFFF', ink: null });
+    if (!o.gone) txt('Official', bx + 40, by + 2, 30, ST.badge, { w: 700 }); }
   if (o.gone) { paint(rrPts(x0, y0, w, 110, 24), { wash: '#DCE6EC', washOp: 200, ink: null }); }
   // the typing box (optional) at the bottom of the screen; messages stack up above it
   let y = y0 + h - 30 - (o.scroll || 0);
@@ -50,6 +55,7 @@ function fakePage(cx, cy, w, h, lt, o = {}) {
   glow(cx, cy, w * .7, ST.screenGlow, .35);
   paint(rrPts(x0 - 40, y0 - 40, w + 80, h + 80, 50), { wash: ST.inkSoft, ink: ST.ink, sw: 1.6 });
   paint(rrPts(x0, y0, w, h, 24), { wash: '#2E2A5A', ink: null });
+  if (o.hands !== false) thumbs(x0, y0, w, h);
   // address bar: the misspelling the viewer can catch (a zero for the o)
   paint(rrPts(x0 + 30, y0 + 25, w - 60, 70, 35), { wash: '#F3F0F8', ink: ST.inkSoft, sw: 1 });
   txt('https://www.rob0x-gifts.com/claim', x0 + 70, y0 + 62, 36, '#3A3A4A', { w: 600 });
@@ -91,4 +97,24 @@ function nerdOnBed(t, lt, P, o = {}) {
   blanket();
   if (!o.noTab) tablet(tx, ty, U, o.tabAng ?? -.15, o.tabK ?? 1, { id: o.id || 'bed', back: o.tabBack });
   return { head: pr.head, tab: [tx, ty] };
+}
+
+// Nerd's thumbs on the tablet's bezel: this screen is in his hands, in real life
+function thumbs(x0, y0, w, h) {
+  for (const s of [-1, 1]) { boilSeed('thumb' + s); const x = s < 0 ? x0 - 30 : x0 + w + 30, y = y0 + h * .62;
+    paint(ribbon([[x + s * 90, y + 140], [x + s * 20, y + 40], [x - s * 25, y - 10]], 86, 60), { wash: ST.skin, ink: ST.ink, sw: 1.2 }); }
+}
+// gameHUD(t, k): a frame that says "this is inside the game" (screen space, after camEnd). k 0..1 fades it in.
+function gameHUD(t, k = 1) {
+  if (k <= .01) return;
+  flushLetters();
+  boilSeed('hud');
+  const c = mixCol('#7CE0FF', '#FFFFFF', .2);
+  for (const [x, y, w, h] of [[0, 0, W, 26], [0, H - 26, W, 26], [0, 0, 26, H], [W - 26, 0, 26, H]]) paint(rectPts(x, y, w, h), { wash: '#3A2C7A', washOp: 255 * k, ink: null });
+  paint(rrPts(30, 30, W - 60, H - 60, 30), { wash: null, ink: c, sw: 3 * k });
+  paint(rrPts(56, 58, 260, 74, 22), { wash: '#3A2C7A', washOp: 230 * k, ink: c, sw: 1.4 });
+  txt('ROBOX', 84, 100, 44, ST.gold, { w: 700, screen: true, alpha: k });
+  for (let i = 0; i < 3; i++) paint(heartPts(1520 + i * 52, 96, 18), { wash: ST.pink, washOp: 255 * k, ink: ST.ink, sw: .8 });
+  paint(ellPts(1712, 96, 20, 20, 12), { wash: ST.gold, washOp: 255 * k, ink: ST.ink, sw: .8 });
+  txt('120', 1742, 98, 34, '#FFFFFF', { w: 700, screen: true, alpha: k });
 }

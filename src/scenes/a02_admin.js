@@ -7,8 +7,9 @@
 
   // 9a  38.0–40.6  ECU chat: hello, compliments
   function s9a(t, lt) {
-    camBegin(960, 540, 1 + .03 * lt); bg();
-    chat(lt, [{ t: .3, from: 'admin', lines: ["Hi! I'm the admin of this server."] }, { t: 1.3, from: 'admin', lines: ['You play really well!'] }]);
+    const pull = ease(seg(lt, .9, 1.6));
+    camBegin(lerp(520, 960, pull), lerp(140, 540, pull), lerp(2.6, 1.0, pull)); bg();
+    chat(lt, [{ t: 1.4, from: 'admin', lines: ["Hi! I'm the admin of this server."] }, { t: 2.0, from: 'admin', lines: ['You play really well!'] }]);
     camEnd(); fadeIn(lt);
   }
   // 9b  40.6–42.0  CU Nerd: flattered, turns the screen away as if someone might see
@@ -35,6 +36,7 @@
     avatar(820, 960, 66, { skin: 'classic', id: 'n11', face: lt > 2.5 ? 'happy' : 'dot', arms: lt > 2.6 ? [1.2 + .2 * Math.sin(lt * 10), 1.2 + .2 * Math.sin(lt * 10 + 1)] : [.15, .15], dy: lt > 2.6 ? .25 * Math.abs(Math.sin(lt * 7)) : 0 });
     avatar(ax, 960, 66, { skin: 'admin', id: 'a11', face: 'happy', badge: true, aura: .7, flip: true, walk, view: lt < 1.6 ? 'side' : 'front', arms: lt > 1.9 && lt < 2.8 ? [.1, 1.6] : [.1, .1] });
     camEnd();
+    gameHUD(t);
     if (lt < .3) flash(1 - lt / .3, '#FBF3E4');
   }
   // 12  52.0–58.0  montage over several days: personal questions, playing together, he calls him "bro"
@@ -47,6 +49,7 @@
       avatar(1120, 960 - 140 * Math.abs(Math.sin(l * 4 + 1)), 60, { skin: 'admin', id: 'a12', face: 'happy', badge: true, aura: .5, flip: true, arms: [1.5, 1.5] });
       for (let i = 0; i < 3; i++) { boilSeed('hrt' + i); const k = frac(l * .8 + i / 3); paint(heartPts(960 + (i - 1) * 90, 620 - 160 * k, 22 * (1 - k * .5)), { wash: ST.pink, washOp: 255 * (1 - k), ink: null }); }
       camEnd();
+      gameHUD(t);
     } else {
       camBegin(960, 540, 1.02); bg();
       const msgs = beat === 0
