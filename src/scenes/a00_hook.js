@@ -77,7 +77,7 @@
       paint(ellPts(0, 0, 38, 38, 18), { wash: '#D9534F', ink: ST.ink, sw: 1 });
       inkLine([[-15, -15], [15, 15]], 2.6, ST.cream, 'ink', 0); inkLine([[15, -15], [-15, 15]], 2.6, ST.cream, 'ink', 0);
       pop();
-      thai('ปฏิเสธรายการ', sx, sy + 50, 40, '#8E2420', { align: 'center', w: 700, pop: k0 });
+      thai('DECLINED', sx, sy + 50, 44, '#8E2420', { align: 'center', w: 700, pop: k0 });
     }
     // Mom's hand with the card: in, tap, back a little, tap harder, pull back and tremble
     const P = kf(lt, [[0, [1700, 820]], [.45, [1190, 700]], [.8, [1030, 640]], [.95, [985, 560]], [1.4, [1080, 640]], [1.85, [1060, 620]], [2.05, [985, 548]], [2.3, [990, 552]], [2.75, [1140, 700]]]);
@@ -122,7 +122,6 @@
     // counter in the foreground
     boilSeed('fg'); paint(rectPts(560, 1060, 1100, 300), { wash: '#8FA7A0', ink: ST.ink, sw: 1.2 });
     camEnd();
-    sub(lt, 1.15, 2.95, 'ค่ะ… ระงับบัตรเหรอคะ?', 'mom');
     if (lt > dur - .3) flash(ease(seg(lt, dur - .3, dur)), ST.cream);
   }
 
@@ -162,7 +161,7 @@
     boilSeed('p3b'); paint(rrPts(bx, by, 380, 140, 26), { wash: ST.cream, ink: ST.ink, sw: 1.2 });
     paint(rrPts(bx + 22, by + 32, 70, 70, 12), { wash: ST.pink, ink: ST.ink, sw: .9 }); paint(rectPts(bx + 52, by + 32, 10, 70), { wash: ST.gold, ink: null });
     paint(ellPts(bx + 47, by + 30, 14, 9, 10), { wash: ST.gold, ink: ST.ink, sw: .6 }); paint(ellPts(bx + 67, by + 30, 14, 9, 10), { wash: ST.gold, ink: ST.ink, sw: .6 });
-    { const [qx, qy, qs] = tr(bx + 104, by + 70); thai('ของขวัญจากแอดมิน', qx, qy, 30 * qs, ST.ink, { w: 700, alpha: .55 + .45 * bl, screen: true }); }
+    { const [qx, qy, qs] = tr(bx + 104, by + 70); thai('A gift from Admin!', qx, qy, 30 * qs, ST.ink, { w: 700, alpha: .55 + .45 * bl, screen: true }); }
     if (k > .2) glow(bx + 57, by + 67, 90, ST.gold, .5 * bl * k);
   }
   function shotPanels(t, lt) {
@@ -185,10 +184,6 @@
       if (!on && !(i === 2 && grow > 0)) paint(rrPts(b[0], b[1], b[2], b[3], 12), { wash: '#2A2533', washOp: 120, ink: null });
       pop();
     }
-    sub(lt, .15, 1.8, 'บัตรไม่ได้หาย…', 'vo');
-    sub(lt, 1.95, 3.6, 'ลูกก็ไม่ได้เติมเกม…', 'vo');
-    sub(lt, 3.75, 5.3, 'แล้วเงินหมื่นห้าหายไปไหน?', 'vo');
-    sub(lt, 5.4, 6.0, 'หนึ่งสัปดาห์ก่อน', 'vo', { size: 44 });
     flushLetters();
     if (lt > dur - .35) brushWipe((lt - (dur - .35)) / .7, ['#3A3F7A', '#5A4A7A']);
     if (lt < .25) flash(1 - lt / .25, ST.cream);

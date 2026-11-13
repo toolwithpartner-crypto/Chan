@@ -28,8 +28,6 @@
     // laughter marks by the friends after the line
     if (lt > 2.2) for (const p of pts) { boilSeed('ha' + p.i); for (let k = 0; k < 3; k++) { const a = -1.2 + k * .5, r = 120 + 12 * Math.sin(lt * 10 + k); inkLine([[p.x + Math.cos(a) * r * .8, p.y - 200 + Math.sin(a) * r * .5], [p.x + Math.cos(a) * r, p.y - 200 + Math.sin(a) * r * .6]], 1.6, ST.ink, 'ink', 0); } }
     camEnd();
-    sub(lt, .3, 2.1, 'ปีกมังกรรุ่นลิมิเต็ดนะเว้ย!', 'friend');
-    sub(lt, 2.15, 3.85, 'เนิร์ดยังใช้คลาสสิคสกินอยู่เลย 555', 'friend');
     if (lt < .35) brushWipe(.5 + lt / .7, ['#3A3F7A', '#5A4A7A']);
     if (lt > dur - .3) flash(ease(seg(lt, dur - .3, dur)) * .9, '#1E2240');
   }
@@ -61,7 +59,6 @@
       thai('3,990', nx + 260, fy + 98 * k, 38 * k, '#8E2420', { align: 'center', w: 700, alpha: k });
     }
     camEnd();
-    sub(lt, .5, 2.3, 'อยากได้บ้างอะ…', 'nerd');
     if (lt > dur - .4) flash(ease(seg(lt, dur - .4, dur)), '#F3E3C4');
   }
 
@@ -89,8 +86,6 @@
     tablet(tx, ty, U * .9, -.05, .8, { id: 'd6' });
     camEnd();
     sepia(1);
-    sub(lt, 1.45, 3.05, 'รหัสแม่คือ… จำไว้นะ', 'mom');
-    sub(lt, 3.15, 4.5, 'โหลดเกมเองได้เลย แม่ไม่ว่าง', 'mom');
     if (lt < .35) flash(1 - ease(lt / .35), '#F3E3C4');
     if (lt > dur - .25) flash(ease(seg(lt, dur - .25, dur)) * .8, '#F3E3C4');
   }
@@ -106,10 +101,10 @@
     const k1 = backOut(seg(lt, .2, .55)), k2 = backOut(seg(lt, .9, 1.25)), k3 = backOut(seg(lt, 1.6, 1.95));
     boilSeed('acc-row');
     paint(rrPts(640, 300, 640, 150, 26), { wash: ST.cream, washOp: 255 * clamp(k1), ink: ST.ink, sw: 1.2 });
-    if (k1 > .05) { person(720, 375, 46, { who: 'mom', id: 'accm', headOnly: true, eyes: 'dot', mouth: 'smile' }); thai('บัญชีของแม่', 790, 372, 46, ST.ink, { w: 700, pop: k1 }); }
+    if (k1 > .05) { person(720, 375, 46, { who: 'mom', id: 'accm', headOnly: true, eyes: 'dot', mouth: 'smile' }); thai("Mom's account", 790, 372, 46, ST.ink, { w: 700, pop: k1 }); }
     paint(rrPts(640, 480, 640, 150, 26), { wash: ST.cream, washOp: 255 * clamp(k2), ink: ST.ink, sw: 1.2 });
-    if (k2 > .05) { boilSeed('acc-c'); paint(rrPts(670, 515, 120, 80, 10), { wash: '#3E6FB0', ink: ST.ink, sw: 1 }); paint(rrPts(688, 537, 26, 20, 4), { wash: ST.gold, ink: null }); thai('บัตรเครดิต •••• 4821', 815, 555, 40, ST.ink, { pop: k2 }); }
-    if (k3 > .05) { boilSeed('acc-ok'); paint(ellPts(1325, 555, 30 * k3, 30 * k3, 14), { wash: ST.badge, ink: ST.ink, sw: 1 }); inkLine([[1311, 555], [1322, 567], [1341, 543]], 2.2, ST.cream, 'ink', 0); thai('ผูกไว้แล้ว ซื้อได้ทันที', 960, 690, 34, '#3E6FB0', { align: 'center', pop: k3 }); }
+    if (k2 > .05) { boilSeed('acc-c'); paint(rrPts(670, 515, 120, 80, 10), { wash: '#3E6FB0', ink: ST.ink, sw: 1 }); paint(rrPts(688, 537, 26, 20, 4), { wash: ST.gold, ink: null }); thai('Credit card •••• 4821', 815, 555, 40, ST.ink, { pop: k2 }); }
+    if (k3 > .05) { boilSeed('acc-ok'); paint(ellPts(1325, 555, 30 * k3, 30 * k3, 14), { wash: ST.badge, ink: ST.ink, sw: 1 }); inkLine([[1311, 555], [1322, 567], [1341, 543]], 2.2, ST.cream, 'ink', 0); thai('Saved: one-tap purchases ON', 960, 690, 34, '#3E6FB0', { align: 'center', pop: k3 }); }
     camEnd();
     sepia(1);
     if (lt < .25) flash(.8 * (1 - lt / .25), '#F3E3C4');
@@ -127,8 +122,6 @@
       arms: [[.2, .2], [1.5 + wag, .15]], hands: ['hold', 'point'], lean: -.03 });
     camEnd();
     sepia(1);
-    sub(lt, .3, 1.45, 'แค่โหลดเกมฟรีนะ', 'mom');
-    sub(lt, 1.5, 2.75, 'ห้ามซื้ออะไร!', 'mom');
     if (lt < .3) brushWipe(.5 + lt / .6, ['#8E6A4E', '#B48A58']);
   }
   // ---------- 7b: flashback, Nerd nods hard ----------
@@ -175,7 +168,7 @@
         avatar(bx - 180, by + 55, 26, { skin: 'admin', id: 'rqa', face: 'happy', t });
         boilSeed('req-b'); paint(ellPts(bx + 230, by - 32, 16, 16, 12), { wash: ST.badge, ink: ST.ink, sw: .8 }); inkLine([[bx + 222, by - 32], [bx + 228, by - 25], [bx + 239, by - 40]], 1.5, ST.cream, 'ink', 0);
         thai('Admin_Official', bx - 110, by - 30, 40, '#6B5A3A', { w: 700, alpha: clamp(pk) });
-        thai('ส่งคำขอเป็นเพื่อน', bx - 110, by + 35, 36, ST.ink, { alpha: clamp(pk) });
+        thai('sent you a friend request', bx - 110, by + 35, 36, ST.ink, { alpha: clamp(pk) });
       }
       // ping marks
       const pa = seg(lt, .8, 1.5); if (pa > 0 && pa < 1) { boilSeed('ping'); for (let k = 0; k < 6; k++) { const a = k / 6 * TAU, r0 = 300 + 80 * pa; inkLine([[bx + 30 + Math.cos(a) * r0, by + Math.sin(a) * r0 * .5], [bx + 30 + Math.cos(a) * (r0 + 40), by + Math.sin(a) * (r0 + 40) * .5]], 2 * (1 - pa), ST.gold, 'ink', 0); } }

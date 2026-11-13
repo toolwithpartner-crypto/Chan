@@ -232,6 +232,9 @@ function person(x, y, u, o = {}) {
     // mouth
     let m = o.mouth ?? 'smile', mo = o.mouthOpen ?? .5;
     if (o.sing) { const v = typeof VOX === 'function' ? VOX(t) : 0; if (v > .08) { m = 'open'; mo = v; } else m = m ?? 'flat'; }
+    // lip-sync from the placed dialogue (script.js + dialog.js): while one of this character's lines is on, the audio drives the mouth
+    const sp = !mini && typeof speaking === 'function' ? speaking(who, t) : null;
+    if (sp !== null) { if (sp > .08) { m = 'open'; mo = .15 + .85 * sp; } else if (m === 'open') m = 'flat'; }
     const mx = fx + (side ? rx * .25 : tn * rx * .1) + lk[0] * er * .5, my = ry * .5, mw = (side ? .65 : 1 - .3 * at) * u * (who === 'mom' ? .85 : 1);
     if (m === 'smile') inkLine([[mx - .13 * mw, my - .03 * u], [mx, my + .06 * u], [mx + .13 * mw, my - .03 * u]], sw * .7, ST.ink, 'ink', .7);
     else if (m === 'smirk') inkLine([[mx - .1 * mw, my + .01 * u], [mx + .05 * mw, my + .03 * u], [mx + .14 * mw, my - .04 * u]], sw * .7, ST.ink, 'ink', .6);
