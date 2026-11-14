@@ -14,7 +14,7 @@ const PACE = {
   63: { slow: 1.35, hold: 1.2 },   // "don't tell anyone" lands
   69: { hold: .3 }, 73: { slow: 1.35, hold: .3 }, 78: { hold: .2 },
   82: { slow: 1.3, hold: .6 },     // time to spot the zero in the address
-  92: { slow: 1.3, hold: .6 }, 102: { slow: 1.3, hold: .2 }, 106: { slow: 1.2, hold: .4 }, 110: { hold: .8 },
+  92: { slow: 1.3, hold: .6 }, 102: { slow: 1.3, hold: 2.4 }, 106: { slow: 1.2, hold: 1.4 }, 110: { hold: .8 },
   118: { hold: 1.2 },              // Mom takes in the total
   123: { hold: .2 }, 125.5: { hold: .8 }, 128: { hold: .5 }, 132: { hold: .5 }, 137: { slow: 1.3, hold: .6 },
   144: { hold: 1.6 },              // the last image stays

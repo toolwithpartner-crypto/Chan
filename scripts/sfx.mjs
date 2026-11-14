@@ -65,11 +65,11 @@ for (const t of [137.1, 141.0]) add(B, t, .6, whoosh(.6, false), .2);           
 // beds are laid per shot in film time (raw), so they follow the pacing holds and slow-downs exactly
 const R = (() => { let s = 777; return () => ((s = (s * 16807) % 2147483647) / 2147483647) * 2 - 1; })();
 const fade = (t, d, f = .4) => Math.min(1, t / f, (d - t) / f);
-const hum = (d, f0 = 60) => { let y = 0; return (i, t) => { y += .01 * (R() - y); return fade(t, d) * (Math.sin(2 * Math.PI * f0 * t) * .25 + Math.sin(2 * Math.PI * f0 * 2 * t) * .12 + y * 3); }; };
-const crickets = d => (i, t) => { const c = Math.floor(t * 2.3), ph = t * 2.3 - c, on = ph < .28 ? Math.sin(Math.PI * ph / .28) * (Math.sin(2 * Math.PI * 30 * t) > 0 ? 1 : 0) : 0; return fade(t, d, .8) * on * Math.sin(2 * Math.PI * 4400 * t) * .22; };
-const birds = d => { const ev = []; for (let x = .3; x < d; x += .9 + Math.abs(R()) * 2.2) ev.push([x, 2600 + R() * 600, R() > 0 ? 1 : -1]); return (i, t) => { let v = 0; for (const [x, f, s] of ev) { const u = t - x; if (u > 0 && u < .14) v += Math.sin(2 * Math.PI * (f + s * 1800 * u) * u) * Math.sin(Math.PI * u / .14); } return fade(t, d, .8) * v * .18; }; };
+const hum = (d, f0 = 60) => { let y = 0; return (i, t) => { y += .01 * (R() - y); return fade(t, d) * (Math.sin(2 * Math.PI * f0 * t) * .2 + y * 1.2); }; };
+const crickets = d => (i, t) => { const c = Math.floor(t * 2.3), ph = t * 2.3 - c, on = ph < .22 ? Math.sin(Math.PI * ph / .22) ** 2 : 0; return fade(t, d, .8) * on * Math.sin(2 * Math.PI * 3800 * t) * .08; };
+const birds = d => { const ev = []; for (let x = .3; x < d; x += .9 + Math.abs(R()) * 2.2) ev.push([x, 2600 + R() * 600, R() > 0 ? 1 : -1]); return (i, t) => { let v = 0; for (const [x, f, s] of ev) { const u = t - x; if (u > 0 && u < .14) v += Math.sin(2 * Math.PI * (f + s * 1800 * u) * u) * Math.sin(Math.PI * u / .14); } return fade(t, d, .8) * v * .1; }; };
 const murmur = d => { let a = 0, b = 0; return (i, t) => { a += .06 * (R() - a); b += .5 * (a - b); return fade(t, d) * (a - b) * 5 * (.7 + .3 * Math.sin(t * 1.7) * Math.sin(t * .6)); }; };
-const sparkleBed = d => { const ev = []; for (let x = .2; x < d; x += .35 + Math.abs(R()) * .6) ev.push([x, [2093, 2637, 3136, 3520][Math.floor(Math.abs(R()) * 4)]]); return (i, t) => { let v = 0; for (const [x, f] of ev) { const u = t - x; if (u > 0 && u < .6) v += Math.exp(-u * 8) * Math.sin(2 * Math.PI * f * u); } return fade(t, d) * v * .14; }; };
+const sparkleBed = d => { const ev = []; for (let x = .2; x < d; x += .35 + Math.abs(R()) * .6) ev.push([x, [2093, 2637, 3136, 3520][Math.floor(Math.abs(R()) * 4)]]); return (i, t) => { let v = 0; for (const [x, f] of ev) { const u = t - x; if (u > 0 && u < .6) v += Math.exp(-u * 8) * Math.sin(2 * Math.PI * f * u); } return fade(t, d) * v * .07; }; };
 const PLACE = sh => {
   const a = sh.a, ins = sh.ins;
   if (ins === 'ask') return 'day';
@@ -111,7 +111,7 @@ rustle(16.6); rustle(18.2, .4); pop(25.0, .25); tap(27.4); rustle(30.2, .5);
 // Act 2: the voice appears, the bed, the head turns
 add(B, 40.9, .5, whoosh(.5), .2); poof(42.6); rustle(44.2); poof(69.35); add(B, 70.7, .4, whoosh(.4, false), .25); rustle(79, .5); poof(78.1, .2);
 // Act 3
-pop(84.5, .25); poof(89.9, .2); add(B, 91.0, .25, kick(), .2); for (const t of [98.3, 98.9, 99.5]) add(B, t, .3, square(500 + 80 * (t % 1), .12), .12);
+pop(84.5, .25); poof(89.9, .2); add(B, 91.0, .25, kick(), .2); 
 heartbeat(102.3, 4, .25); rustle(108.8, .8, .2);
 // Act 4
 carPass(118.6, -1); carPass(121.2, 1); add(B, 119.4, .8, (i, t) => Math.sign(Math.sin(2 * Math.PI * 150 * t)) * .1 * (Math.sin(2 * Math.PI * 11 * t) > 0 ? 1 : .2), .5);
